@@ -1,3 +1,4 @@
+import urequests as requests
 from tools import connect,reconnect
 from machine import WDT,Timer,ADC,RTC
 import time
@@ -15,7 +16,7 @@ def alert(t:float):
     second = date_tuple[6]
     date_str = f'{year}-{month}-{day} {hour}:{minites}:{second}'
     try:
-        response = requests.get('https://hook.us1.make.com/lwylhnsajcmk7kfpnog7kmb8l25894u7?name=robert&date=%E4%BB%8A%E5%A4%A9&temperature=56.987')
+        response = requests.get('https://hook.us1.make.com/vc90h2cjk8u4h9bxkd6wx3wmzhhcdjdw?Address=robert&date=%E4%BB%8A%E5%A4%A9&temperature=56.987')
     except:
         reconnect()
     else:

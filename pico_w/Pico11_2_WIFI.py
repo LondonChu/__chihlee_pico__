@@ -8,8 +8,8 @@ def connect():
     # enable station interface and connect to WiFi access point
     nic = network.WLAN(network.STA_IF)
     nic.active(True)
-    nic.connect('7','0932305614')
-    #nic.connect('LondonChu','7878787')
+    #nic.connect('7','0932305614')
+    nic.connect('LondonChu','7878787')
 
     max_wait = 10
 
