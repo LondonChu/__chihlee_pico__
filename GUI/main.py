@@ -3,10 +3,15 @@ import pandas as pd
 import requests
 from streamlit_autorefresh import st_autorefresh
 
+import datetime as t
+import pytz
+
 st_autorefresh(interval=5000)
 
 st.title("Pico_W_職能發展協會專案")
 st.header("雞舍:red[溫度]和:blue[光線]狀態")
+taiwan_tz = pytz.timezone("Asia/Taipei") #時區
+st.write(f":green[{t.datetime.now(taiwan_tz)}]")
 st.divider()
 
 url = 'https://blynk.cloud/external/api/get?token=MOPYimQu2tyQj136eu3jLO01iDMIeuOR&v0&v1'
