@@ -8,7 +8,7 @@ import urequests as requests
 def fun10(t:Timer | None = None):
     light_value = light.read_u16()
     vr_value = vr.read_u16()
-    url = f'https://blynk.cloud/external/api/batch/update?token=自已的token={light_value}&v1={vr_value}'
+    url = f'https://blynk.cloud/external/api/batch/update?token=JGvtcYjF5WrmvZRLGAH9tOVfpuFrIvx5={light_value}&v1={vr_value}'
     try:
         led.value(1)
         response = requests.get(url)
