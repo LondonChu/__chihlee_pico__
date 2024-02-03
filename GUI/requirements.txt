@@ -2,3 +2,4 @@ requests ##http請求
 streamlit ##網頁服務套件
 pandas ##資料處理
 streamlit-autorefresh ##自動刷新
+python-dotenv
