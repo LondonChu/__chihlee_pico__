@@ -9,5 +9,5 @@ df
 
 st.title("Pico_W_職能發展協會專案")
 st.header("雞舍:red[溫度]和:blue[光線]狀態")
-st.write(f":green[t.datetime.now()]")
+st.write(f":green[{t.datetime.now()}]")
 st.divider()
