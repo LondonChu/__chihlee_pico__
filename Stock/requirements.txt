@@ -1,5 +1,5 @@
 requests ##http請求
-openai # 串接 OpenAI AI
 yfinance # 串接 Yahoo Finance APIs
 pandas ##資料處理
+numpy
 streamlit-autorefresh ##自動刷新
