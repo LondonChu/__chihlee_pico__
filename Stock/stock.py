@@ -31,7 +31,7 @@ def calculate(df):
 stock_id = "2313.TW"
 # 抓取半年資料
 end = t.date.today()  # 資料結束時間
-start = end - t.timedelta(days=500)  # 資料起始時間
+start = end - t.timedelta(days=100)  # 資料起始時間
 df = yf.download(stock_id, start=start, end=end).reset_index()  # 抓取股價資料
 df = calculate(df)
 df1 = pd.DataFrame({
