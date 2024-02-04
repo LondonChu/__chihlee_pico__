@@ -12,22 +12,23 @@ st.write(f":green[{t.datetime.now(taiwan_tz)}]")
 st.divider()
 
 def calculate(df):
-    df['TR'] = pd.concat([df['High']-df['Low'],abs(df['High']-df['Close'].shift(1)),abs(df['Low']-df['Close'].shift(1))],axis=1).max(axis=1)
+    #df['TR'] = pd.concat([abs(df['High']-df['Low']),abs(df['High']-df['Close'].shift(1)),abs(df['Low']-df['Close'].shift(1))],axis=1).max(axis=1)
+    df['TR'] = pd.concat([df['High']-df['Low'],df['High']-df['Close'].shift(1),df['Close'].shift(1)-df['Low']],axis=1).max(axis=1)
     df['+DM_DFF'] = df['High'].diff()
     df['-DM_DFF'] = df['Low'].diff()
-    df['+DM'] = np.where((df['+DM_DFF'] > df['-DM_DFF']) & (df['+DM_DFF'] > 0), df['+DM_DFF'], 0)
+    df['+DM'] = np.where((df['+DM_DFF'] > -df['-DM_DFF']) & (df['+DM_DFF'] > 0), df['+DM_DFF'], 0)
     df['-DM'] = np.where((-df['-DM_DFF'] > df['+DM_DFF']) & (-df['-DM_DFF'] > 0), -df['-DM_DFF'], 0)
     df['TR_S'] = df['TR'].rolling(window=14).sum()
     df['+DM_S'] = df['+DM'].rolling(window=14).sum()
     df['-DM_S'] = df['-DM'].rolling(window=14).sum()
     df['+DI'] = 100 * df['+DM_S'] / df['TR_S']
     df['-DI'] = 100 * df['-DM_S'] / df['TR_S']
-    df['DX'] = 100 * abs(df['+DI'] - df['-DI']) / abs(df['+DI'] + df['-DI'])
-    df['ADX'] = df['DX'].rolling(window=14).mean()
+    df['DX'] = 100 * abs(df['+DI'] - df['-DI']) / (df['+DI'] + df['-DI'])
+    df['ADX'] = (df['DX'].rolling(window=14).sum())/14
     return df
 
 # 輸入股票代號
-stock_id = "2330.TW"
+stock_id = "2313.TW"
 # 抓取半年資料
 end = t.date.today()  # 資料結束時間
 start = end - t.timedelta(days=500)  # 資料起始時間
