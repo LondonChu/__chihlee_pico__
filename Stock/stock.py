@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import datetime as t
 import pytz
+from openai import OpenAI, OpenAIError  # 串接 OpenAI AI
+import yfinance as yf  # 串接 Yahoo Finance API
 
 
 st.title("股市監控室")
