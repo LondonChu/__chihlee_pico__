@@ -12,26 +12,31 @@ st.write(f":green[{t.datetime.now(taiwan_tz)}]")
 st.divider()
 
 def calculate(df):
-    #df['TR'] = pd.concat([abs(df['High']-df['Low']),abs(df['High']-df['Close'].shift(1)),abs(df['Low']-df['Close'].shift(1))],axis=1).max(axis=1)
-    df['TR'] = pd.concat([df['High']-df['Low'],df['High']-df['Close'].shift(1),df['Close'].shift(1)-df['Low']],axis=1).max(axis=1)
+    df['TR'] = pd.concat([abs(df['High']-df['Low']),abs(df['High']-df['Close'].shift(1)),abs(df['Low']-df['Close'].shift(1))],axis=1).max(axis=1)
+    #df['TR'] = pd.concat([df['High']-df['Low'],df['High']-df['Close'].shift(1),df['Close'].shift(1)-df['Low']],axis=1).max(axis=1)
     df['+DM_DFF'] = df['High'].diff()
-    df['-DM_DFF'] = df['Low'].diff()
-    df['+DM'] = np.where((df['+DM_DFF'] > -df['-DM_DFF']) & (df['+DM_DFF'] > 0), df['+DM_DFF'], 0)
-    df['-DM'] = np.where((-df['-DM_DFF'] > df['+DM_DFF']) & (-df['-DM_DFF'] > 0), -df['-DM_DFF'], 0)
-    df['TR_S'] = df['TR'].rolling(window=14).sum()
-    df['+DM_S'] = df['+DM'].rolling(window=14).sum()
-    df['-DM_S'] = df['-DM'].rolling(window=14).sum()
-    df['+DI'] = 100 * df['+DM_S'] / df['TR_S']
-    df['-DI'] = 100 * df['-DM_S'] / df['TR_S']
+    df['-DM_DFF'] = -df['Low'].diff()
+    df['+DM'] = np.where((df['+DM_DFF'] > df['-DM_DFF']) & (df['+DM_DFF'] > 0), df['+DM_DFF'], 0)#PDM
+    df['-DM'] = np.where((df['-DM_DFF'] > df['+DM_DFF']) & (df['-DM_DFF'] > 0), df['-DM_DFF'], 0)#NDM    
+    df['ATR'] = df['TR'].rolling(window=14).sum()
+    df['+ADM'] = df['+DM'].rolling(window=14).sum()
+    df['-ADM'] = df['-DM'].rolling(window=14).sum()
+    # df['ATR'] = df['TR'].shift(1)*13/14+df['TR']*1/14
+    # df['+ADM'] = df['+DM'].shift(1)*13/14+df['+DM']*1/14
+    # df['-ADM'] = df['-DM'].shift(1)*13/14+df['-DM']*1/14
+    df['+DI'] = 100 * df['+ADM'] / df['ATR']
+    df['-DI'] = 100 * df['-ADM'] / df['ATR']
+    #df['+DI'] = df['+DI'].shift(1)*13/14+df['+DI']*1/14
+    #df['-DI'] = df['-DI'].shift(1)*13/14+df['-DI']*1/14
     df['DX'] = 100 * abs(df['+DI'] - df['-DI']) / (df['+DI'] + df['-DI'])
     df['ADX'] = (df['DX'].rolling(window=14).sum())/14
     return df
 
 # 輸入股票代號
-stock_id = "2313.TW"
+stock_id = "3715.TW"
 # 抓取半年資料
-end = t.date.today()  # 資料結束時間
-start = end - t.timedelta(days=100)  # 資料起始時間
+end = t.date(2022,10,4)#t.date.today()  # 資料結束時間
+start = t.date(2022,8,24)#end - t.timedelta(days=13)  # 資料起始時間
 df = yf.download(stock_id, start=start, end=end).reset_index()  # 抓取股價資料
 df = calculate(df)
 df1 = pd.DataFrame({
@@ -40,15 +45,15 @@ df1 = pd.DataFrame({
   '高': df['High'],
   '低': df['Low'],
   '收': df['Close'],
-  '成交量': (df['Volume']/1000).round(0),
+  # '成交量': (df['Volume']/1000).round(0),
   # '+DM_DFF': df['+DM_DFF'],
   # '-DM_DFF': df['-DM_DFF'],
   # '+DM': df['+DM'],
   # '-DM': df['-DM'],
-  # '+DM_S':df['+DM_S'],
-  # '-DM_S': df['-DM_S'],
+  # '+ADM':df['+ADM'],
+  # '-ADM': df['-ADM'],
   # 'TR':df['TR'],
-  # 'TR_S':df['TR_S'],
+  # 'ATR':df['ATR'],
   '+DI': (df['+DI']).round(2),
   '-DI': (df['-DI']).round(2),
   'ADX': df['ADX']
