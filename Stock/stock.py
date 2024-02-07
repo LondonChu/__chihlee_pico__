@@ -49,6 +49,20 @@ def calculate(df):
     for i in range(29,maxIndex):
         df['ADX'][i] = df['ADX'][i-1]*13/14+df['DX'][i]*1/14
 
+    df['Index']=df['+DI']
+    statusLast = 0 #1:正 2:負
+    for i in range(13,maxIndex):
+        statusNow=1 if df['+DI'][i]>=df['-DI'][i] else 2
+        
+        if statusLast==1 and statusNow==2:
+            df['Index'][i]='🤢🤢'
+        elif statusLast==2 and statusNow==1:
+            df['Index'][i]='😍😍'
+        else:
+            df['Index'][i]= '🤢' if statusNow==2 else '😍'
+
+        statusLast=statusNow
+      
     return df
 
 # 輸入股票代號
@@ -58,15 +72,16 @@ start = end - t.timedelta(days=365)  # 資料起始時間
 df = yf.download(stock_id, start=start, end=end).reset_index()  # 抓取股價資料
 df = calculate(df)
 df1 = pd.DataFrame({
-  'Date': pd.to_datetime(df['Date']).dt.strftime('%Y/%m/%d'),
-  'Open': df['Open'],
-  'High': df['High'],
-  'Low': df['Low'],
-  'Close': df['Close'],
+  '日期': pd.to_datetime(df['Date']).dt.strftime('%Y/%m/%d'),
+  '開': df['Open'],
+  '高': df['High'],
+  '低': df['Low'],
+  '收': df['Close'],
   '成交量': (df['Volume']/1000).round(0),
   '+DI': (df['+DI']).round(2),
   '-DI': (df['-DI']).round(2),
-  'ADX': (df['ADX']).round(2)
+  'ADX': (df['ADX']).round(2),
+  '':df['Index']
 })
 df1=df1.sort_values('Date',ascending=False)
 df1.reset_index(drop=True, inplace=True)
