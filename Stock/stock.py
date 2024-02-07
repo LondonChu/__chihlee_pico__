@@ -83,7 +83,7 @@ df1 = pd.DataFrame({
   'ADX': (df['ADX']).round(2),
   '':df['Index']
 })
-df1=df1.sort_values('Date',ascending=False)
+df1=df1.sort_values('日期',ascending=False)
 df1.reset_index(drop=True, inplace=True)
 df1
 df2 = pd.DataFrame({
